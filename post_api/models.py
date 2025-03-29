@@ -13,7 +13,7 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f'{self.author.username}: {self.text[:30]}...'
+        return f'Post {self.author.username}: {self.text[:30]}...'
 
 
 class Photo(models.Model):
@@ -25,3 +25,17 @@ class Photo(models.Model):
     def __str__(self):
         filename = os.path.basename(self.image.name)
         return f'{self.post}: {filename}'
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name='user_comments'
+    )
+    post = models.ForeignKey(
+        to=Post, on_delete=models.CASCADE, related_name='post_comments'
+    )
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'Comment {self.author.username}: {self.text[:30]}...'
