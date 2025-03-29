@@ -39,3 +39,24 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'Comment {self.author.username}: {self.text[:30]}...'
+
+
+class Like(models.Model):
+    user = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name='user_likes'
+    )
+    post = models.ForeignKey(
+        to=Post, on_delete=models.CASCADE, related_name='post_likes'
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'post'],
+                name='unique_user_post_like'
+            )
+        ]
+
+    def __str__(self):
+        return f'{self.user} liked {self.post}'
