@@ -16,11 +16,11 @@ class Post(models.Model):
         return f'Post {self.author.username}: {self.text[:30]}...'
 
 
-class Photo(models.Model):
+class Image(models.Model):
     post = models.ForeignKey(
-        to=Post, on_delete=models.CASCADE, related_name='photos'
+        to=Post, on_delete=models.CASCADE, related_name='images'
     )
-    image = models.ImageField(upload_to='photos/')
+    image = models.ImageField(upload_to='images/')
 
     def __str__(self):
         filename = os.path.basename(self.image.name)
