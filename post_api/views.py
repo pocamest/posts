@@ -37,7 +37,9 @@ class PostViewSet(viewsets.ModelViewSet):
         if not created:
             like.delete()
 
+        likes_count = models.Like.objects.filter(post=post).count()
+
         return Response({
             'is_liked': created,
-            'likes_count': post.post_likes.count()
+            'likes_count': likes_count
         }, status=status.HTTP_200_OK)
