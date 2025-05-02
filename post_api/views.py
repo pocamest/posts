@@ -2,7 +2,9 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (
+    IsAuthenticated, IsAuthenticatedOrReadOnly
+)
 from post_api import serializers, models
 from .permissions import IsAuthorOrReadOnly
 from django.db.models import Count
@@ -10,7 +12,7 @@ from django.db.models import Count
 
 class PostViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PostSerializer
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsAuthorOrReadOnly, IsAuthenticatedOrReadOnly]
     queryset = (
         models.Post.objects
         .annotate(likes_count=Count('post_likes'))
@@ -24,6 +26,7 @@ class PostViewSet(viewsets.ModelViewSet):
     @action(
         detail=True,
         methods=['post'],
+        permission_classes=[IsAuthenticated],
         url_path='like'
     )
     def like(self, request, pk=None):
