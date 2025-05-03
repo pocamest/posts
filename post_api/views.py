@@ -45,3 +45,19 @@ class PostViewSet(viewsets.ModelViewSet):
             'is_liked': created,
             'likes_count': likes_count
         }, status=status.HTTP_200_OK)
+
+
+class CommentViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.CommentSerializer
+    permission_classes = [IsAuthorOrReadOnly, IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        return models.Comment.objects.filter(
+            post_id=self.kwargs['post_pk']
+        ).select_related('author')
+
+    def perform_create(self, serializer):
+        serializer.save(
+            author=self.request.user,
+            post_id=self.kwargs['post_pk']
+        )
