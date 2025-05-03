@@ -14,12 +14,6 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'author', 'text', 'created_at']
 
 
-class LikeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Like
-        fields = ['id', 'user', 'created_at']
-
-
 class PostSerializer(serializers.ModelSerializer):
     images = ImageSerializer(many=True)
     comments = CommentSerializer(many=True, source='post_comments')
