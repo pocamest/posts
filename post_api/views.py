@@ -20,8 +20,10 @@ class PostViewSet(viewsets.ModelViewSet):
         .prefetch_related('images', 'post_comments', 'post_likes')
     )
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+    def get_serializer_class(self):
+        if self.action in ['create', 'update', 'partial_update']:
+            return serializers.PostCreateUpdateSerializer
+        return super().get_serializer_class()
 
     @action(
         detail=True,
