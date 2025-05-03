@@ -9,12 +9,19 @@ class ImageSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        slug_field='username', read_only=True
+    )
+
     class Meta:
         model = models.Comment
         fields = ['id', 'author', 'text', 'created_at']
 
 
 class PostSerializer(serializers.ModelSerializer):
+    author = serializers.SlugRelatedField(
+        slug_field='username', read_only=True
+    )
     images = ImageSerializer(many=True)
     comments = CommentSerializer(many=True, source='post_comments')
     likes_count = serializers.IntegerField(read_only=True)
